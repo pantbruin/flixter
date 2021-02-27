@@ -20,6 +20,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.dataSource = self
         tableView.delegate = self
         
+        
         let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")!
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
@@ -68,14 +69,32 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         return cell
     }
-    /*
+
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
+    // prepare will 'prepare' whatever is needed before going into MovieDetailsViewController, including passing it the movie that was selected from the MoviesViewController
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
+
+        // Find the selected movie cell and assign the cell based on what was tapped on. This is stored in the sender argument
+        let cell = sender as! UITableViewCell
+        let indexPath = tableView.indexPath(for: cell)!
+        let movie = movies[indexPath.row]
+        
         // Pass the selected object to the new view controller.
+        // Must cast the destination to a MovieDetailsViewController otherwise you get a
+        // generic UIViewController
+        let detailsViewController = segue.destination as! MovieDetailsViewController
+        
+        // Now that we've casted in MovieDetailsViewController, set .movie data member
+        // as the movie that was tapped on, effectively passing movie into the
+        // MovieDetailsViewController
+        detailsViewController.movie = movie
+        
+        // Deselects the cell that was selected upon coming back to the UITableView
+        tableView.deselectRow(at: indexPath, animated: true)
+        
     }
-    */
 
 }
